@@ -20,10 +20,15 @@
   <body>
     <div class="display">
       <div class='card'></div>
+      <div class='debug'></div>
     </div>
     <script>
-const FLAT_THRESHOLD = 10;
+const FLAT_THRESHOLD = 20;
+
 const card = $('.card')
+const debug = $('.debug')
+const gammaWindow = [];
+const gammaWindowSize = 5;
 let gamma = 0;
 let isGoingUp = false;
 let isGoingDown = false;
@@ -32,17 +37,28 @@ let isFlat = true;
 let wasFlat = true
 let cardIndex = 0
 
-
 var args = {
-  frequency: 50,
+  frequency: 10,
   gravityNormalized: true,
-  decimalCount: 3,
+  decimalCount: 2,
 };
 
 var gn = new GyroNorm();
 gn.init(args).then(function(){
   gn.start(function(data){
+    gammaWindow.push(data.do.gamma);
+    if (gammaWindow.length > gammaWindowSize) {
+      gammaWindow.shift();
+    }
+
+    gamma = Math.round(
+      gammaWindow.reduce((a, b) => a + b) / gammaWindow.length
+    );
+
     gamma = data.do.gamma;
+
+    debug.text(gamma);
+
     isFlat = gamma > -FLAT_THRESHOLD && gamma < FLAT_THRESHOLD;
 
     if (isFlat != wasFlat) {
