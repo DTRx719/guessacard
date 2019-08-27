@@ -5,23 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guess a Card</title>
     <script src="/lib/gyronorm.complete.min.js"></script>
-    <script type="text/javascript" src="/lib/smoothie.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="/cards.js"></script>
     <style>
       .display {
         font-size: 20px;
-      }
-      .square {
-        height: 50px;
-        width: 50px;
-        background-color: black;
-      }
-      .flat {
-        background-color: red;
-      }
-      .result {
-        font-size: 40px;
       }
       .card {
         font-size: 40px;
@@ -31,55 +19,18 @@
   </head>
   <body>
     <div class="display">
-      <div>
-        <label>do_alpha: </label>
-        <span id="do_alpha"></span>
-      </div>
-      <div>
-        <label>do_beta: </label>
-        <span id="do_beta"></span>
-      </div>
-      <div>
-        <label>do_gamma: </label>
-        <span id="do_gamma"></span>
-        <span id="do_gamma_min"></span>
-        <span id="do_gamma_max"></span>
-        <div id="do_gamma_abs"></div>
-      </div>
-      <canvas id="mycanvas" width="300" height="100"></canvas>
-      <div class='square'></div>
-      <div class='result'></div>
       <div class='card'></div>
     </div>
     <script>
-const do_alpha = $('#do_alpha');
-const do_beta = $('#do_beta');
-const do_gamma = $('#do_gamma');
-const do_absolute = $('#do_absolute');
-const do_gamma_min = $('#do_gamma_min');
-const do_gamma_max = $('#do_gamma_max');
-const do_gamma_abs = $('#do_gamma_abs');
-const square = $('.square')
-const result = $('.result')
+const FLAT_THRESHOLD = 10;
 const card = $('.card')
-
-let min = 0;
-let max = 0;
-
 let gamma = 0;
-let previous_gamma = 0;
 let isGoingUp = false;
 let isGoingDown = false;
 let isFaceUp = true // instructions and verify
 let isFlat = true;
 let wasFlat = true
 let cardIndex = 0
-const FLAT_THRESHOLD = 30;
-
-var smoothie = new SmoothieChart({maxValue:90,minValue:-90});
-smoothie.streamTo(document.getElementById("mycanvas"), 1000);
-var line1 = new TimeSeries();
-smoothie.addTimeSeries(line1);
 
 
 var args = {
@@ -92,25 +43,7 @@ var gn = new GyroNorm();
 gn.init(args).then(function(){
   gn.start(function(data){
     gamma = data.do.gamma;
-    do_alpha.text(Math.round(data.do.alpha))
-    do_beta.text(Math.round(data.do.beta))
-    do_gamma.text(Math.round(gamma))
-
-    if (data.do.gamma > max) {
-      max = gamma;
-    }
-
-    if (data.do.gamma < min) {
-      min = gamma;
-    }
-
-    do_gamma_min.text(Math.round(min))
-    do_gamma_max.text(Math.round(max))
-    do_gamma_abs.text(Math.round(Math.abs(gamma)))
-    line1.append(new Date().getTime(), Math.round(gamma));
-
     isFlat = gamma > -FLAT_THRESHOLD && gamma < FLAT_THRESHOLD;
-    square.toggleClass('flat', isFlat)
 
     if (isFlat != wasFlat) {
       if (wasFlat) {
@@ -131,27 +64,7 @@ gn.init(args).then(function(){
       isGoingUp = false;
       isGoingDown = false;
     }
-
     wasFlat = isFlat;
-    previous_gamma = gamma;
-
-    // Process:
-    // data.do.alpha  ( deviceorientation event alpha value )
-    // data.do.beta   ( deviceorientation event beta value )
-    // data.do.gamma  ( deviceorientation event gamma value )
-    // data.do.absolute ( deviceorientation event absolute value )
-
-    // data.dm.x    ( devicemotion event acceleration x value )
-    // data.dm.y    ( devicemotion event acceleration y value )
-    // data.dm.z    ( devicemotion event acceleration z value )
-
-    // data.dm.gx   ( devicemotion event accelerationIncludingGravity x value )
-    // data.dm.gy   ( devicemotion event accelerationIncludingGravity y value )
-    // data.dm.gz   ( devicemotion event accelerationIncludingGravity z value )
-
-    // data.dm.alpha  ( devicemotion event rotationRate alpha value )
-    // data.dm.beta   ( devicemotion event rotationRate beta value )
-    // data.dm.gamma  ( devicemotion event rotationRate gamma value )
   });
 }).catch(function(e){
   console.log('device not supported')
