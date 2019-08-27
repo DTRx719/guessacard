@@ -8,27 +8,38 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="/cards.js"></script>
     <style>
+      body {
+        background-color: #66cc66;
+        margin: 0;
+        padding: 0;
+      }
       .display {
         font-size: 20px;
       }
       .card {
-        font-size: 40px;
-        padding: 30px;
       }
     </style>
   </head>
   <body>
     <div class="display">
-      <div class='card'></div>
+      <svg
+        class="card"
+        viewBox="0 0 300 300"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+      >
+        <use xlink:href="cards.svg#back" x="0" y="0" fill="red"/>
+      </svg>
       <div class='debug'></div>
     </div>
     <script>
 const FLAT_THRESHOLD = 20;
+/*
+        width="169.075"
+        height="244.640"*/
 
 const card = $('.card')
 const debug = $('.debug')
-const gammaWindow = [];
-const gammaWindowSize = 5;
 let gamma = 0;
 let isGoingUp = false;
 let isGoingDown = false;
@@ -46,18 +57,7 @@ var args = {
 var gn = new GyroNorm();
 gn.init(args).then(function(){
   gn.start(function(data){
-    gammaWindow.push(data.do.gamma);
-    if (gammaWindow.length > gammaWindowSize) {
-      gammaWindow.shift();
-    }
-
-    gamma = Math.round(
-      gammaWindow.reduce((a, b) => a + b) / gammaWindow.length
-    );
-
     gamma = data.do.gamma;
-
-    debug.text(gamma);
 
     isFlat = gamma > -FLAT_THRESHOLD && gamma < FLAT_THRESHOLD;
 
