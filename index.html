@@ -16,28 +16,24 @@
       .display {
         font-size: 20px;
       }
-      .card {
-      }
     </style>
   </head>
   <body>
     <div class="display">
-      <svg
-        class="card"
-        viewBox="0 0 300 300"
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-      >
-        <use xlink:href="cards.svg#back" x="0" y="0" fill="red"/>
-      </svg>
+      <div class="card-container">
+        <svg
+          class="card"
+          viewBox="0 0 169.075 244.640"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+        >
+          <use xlink:href="cards.svg#back" x="0" y="0" fill="red"/>
+        </svg>
+      </div>
       <div class='debug'></div>
     </div>
     <script>
 const FLAT_THRESHOLD = 20;
-/*
-        width="169.075"
-        height="244.640"*/
-
 const card = $('.card')
 const debug = $('.debug')
 let gamma = 0;
