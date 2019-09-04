@@ -6,7 +6,6 @@
     <title>Guess a Card</title>
     <script src="/lib/gyronorm.complete.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="/cards.js"></script>
     <style>
       body {
         background-color: #66cc66;
@@ -33,16 +32,71 @@
       <div class='debug'></div>
     </div>
     <script>
+const CARDS = [
+  "heart_1",
+  "heart_2",
+  "heart_3",
+  "heart_4",
+  "heart_5",
+  "heart_6",
+  "heart_7",
+  "heart_8",
+  "heart_9",
+  "heart_10",
+  "heart_king",
+  "heart_queen",
+  "heart_jack",
+  "diamond_1",
+  "diamond_2",
+  "diamond_3",
+  "diamond_4",
+  "diamond_5",
+  "diamond_6",
+  "diamond_7",
+  "diamond_8",
+  "diamond_9",
+  "diamond_10",
+  "diamond_king",
+  "diamond_queen",
+  "diamond_jack",
+  "club_1",
+  "club_2",
+  "club_3",
+  "club_4",
+  "club_5",
+  "club_6",
+  "club_7",
+  "club_8",
+  "club_9",
+  "club_10",
+  "club_king",
+  "club_queen",
+  "club_jack",
+  "spade_1",
+  "spade_2",
+  "spade_3",
+  "spade_4",
+  "spade_5",
+  "spade_6",
+  "spade_7",
+  "spade_8",
+  "spade_9",
+  "spade_10",
+  "spade_king",
+  "spade_queen",
+  "spade_jack",
+];
+
 const FLAT_THRESHOLD = 20;
-const card = $('.card')
+const card = $('.card use')
 const debug = $('.debug')
 let gamma = 0;
 let isGoingUp = false;
 let isGoingDown = false;
 let isFaceUp = true // instructions and verify
 let isFlat = true;
-let wasFlat = true
-let cardIndex = 0
+let wasFlat = true;
+let value = "spade_jack";
 
 var args = {
   frequency: 10,
@@ -64,8 +118,9 @@ gn.init(args).then(function(){
       } else {
         if ((gamma > 0 && isGoingDown) || (gamma < 0 && isGoingUp)) {
           if (isFaceUp) {
-            cardIndex = Math.floor(Math.random() * 52)
-            card.text(CARDS[cardIndex].value + ' of ' + CARDS[cardIndex].suit)
+            value = CARDS[Math.floor(Math.random()*CARDS.length)];
+            card.attr('fill', "")
+            card.attr('xlink:href', `cards.svg#${value}`)
           }
           isFaceUp = !isFaceUp
         }
@@ -80,7 +135,6 @@ gn.init(args).then(function(){
   });
 }).catch(function(e){
   console.log('device not supported')
-
 });
     </script>
   </body>
