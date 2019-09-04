@@ -87,9 +87,11 @@ const CARDS = [
   "spade_jack",
 ];
 
+const $card = $('.card use')
+const $debug = $('.debug')
+
+
 const FLAT_THRESHOLD = 20;
-const card = $('.card use')
-const debug = $('.debug')
 let gamma = 0;
 let isGoingUp = false;
 let isGoingDown = false;
@@ -97,6 +99,7 @@ let isFaceUp = true // instructions and verify
 let isFlat = true;
 let wasFlat = true;
 let value = "spade_jack";
+let card_deck = []
 
 var args = {
   frequency: 10,
@@ -104,7 +107,24 @@ var args = {
   decimalCount: 2,
 };
 
-var gn = new GyroNorm();
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function reset() {
+  card_deck = [...CARDS];
+  shuffle(card_deck);
+  $card.attr('fill', "red");
+  $card.attr('xlink:href', `cards.svg#back`);
+}
+
+reset();
+
+const gn = new GyroNorm();
 gn.init(args).then(function(){
   gn.start(function(data){
     gamma = data.do.gamma;
@@ -118,9 +138,9 @@ gn.init(args).then(function(){
       } else {
         if ((gamma > 0 && isGoingDown) || (gamma < 0 && isGoingUp)) {
           if (isFaceUp) {
-            value = CARDS[Math.floor(Math.random()*CARDS.length)];
-            card.attr('fill', "")
-            card.attr('xlink:href', `cards.svg#${value}`)
+            value = card_deck[Math.floor(Math.random()*card_deck.length)];
+            $card.attr('fill', "")
+            $card.attr('xlink:href', `cards.svg#${value}`)
           }
           isFaceUp = !isFaceUp
         }
