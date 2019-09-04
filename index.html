@@ -90,7 +90,6 @@ const CARDS = [
 const $card = $('.card use')
 const $debug = $('.debug')
 
-
 const FLAT_THRESHOLD = 20;
 let gamma = 0;
 let isGoingUp = false;
@@ -98,7 +97,6 @@ let isGoingDown = false;
 let isFaceUp = true // instructions and verify
 let isFlat = true;
 let wasFlat = true;
-let value = "spade_jack";
 let card_deck = []
 
 var args = {
@@ -115,14 +113,24 @@ function shuffle(a) {
   return a;
 }
 
-function reset() {
+function resetDeck() {
   card_deck = [...CARDS];
   shuffle(card_deck);
   $card.attr('fill', "red");
   $card.attr('xlink:href', `cards.svg#back`);
 }
 
-reset();
+function drawNewCard() {
+  card = card_deck.shift();
+  if (card) {
+    $card.attr('fill', "")
+    $card.attr('xlink:href', `cards.svg#${card}`)
+  } else {
+    resetDeck();
+  }
+}
+
+resetDeck();
 
 const gn = new GyroNorm();
 gn.init(args).then(function(){
@@ -138,9 +146,7 @@ gn.init(args).then(function(){
       } else {
         if ((gamma > 0 && isGoingDown) || (gamma < 0 && isGoingUp)) {
           if (isFaceUp) {
-            value = card_deck[Math.floor(Math.random()*card_deck.length)];
-            $card.attr('fill', "")
-            $card.attr('xlink:href', `cards.svg#${value}`)
+            drawNewCard();
           }
           isFaceUp = !isFaceUp
         }
