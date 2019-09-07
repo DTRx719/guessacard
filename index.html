@@ -29,7 +29,6 @@
           <use xlink:href="cards.svg#back" x="0" y="0" fill="red"/>
         </svg>
       </div>
-      <div class='debug'></div>
     </div>
     <script>
 const CARDS = [
@@ -114,7 +113,6 @@ const shuffle = (a) => {
 document.addEventListener("DOMContentLoaded", () => {
   const gn = new GyroNorm();
   const $card = $('.card use')
-  const $debug = $('.debug')
 
   const resetDeck = () => {
     card_deck = [...CARDS];
