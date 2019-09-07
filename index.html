@@ -87,9 +87,6 @@ const CARDS = [
   "spade_jack",
 ];
 
-const $card = $('.card use')
-const $debug = $('.debug')
-
 const FLAT_THRESHOLD = 20;
 let gamma = 0;
 let isGoingUp = false;
@@ -99,13 +96,14 @@ let isFlat = true;
 let wasFlat = true;
 let card_deck = []
 
-var args = {
+const gnArgs = {
   frequency: 10,
   gravityNormalized: true,
   decimalCount: 2,
 };
 
-function shuffle(a) {
+
+const shuffle = (a) => {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
@@ -113,55 +111,59 @@ function shuffle(a) {
   return a;
 }
 
-function resetDeck() {
-  card_deck = [...CARDS];
-  shuffle(card_deck);
-  $card.attr('fill', "red");
-  $card.attr('xlink:href', `cards.svg#back`);
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const gn = new GyroNorm();
+  const $card = $('.card use')
+  const $debug = $('.debug')
 
-function drawNewCard() {
-  card = card_deck.shift();
-  if (card) {
-    $card.attr('fill', "")
-    $card.attr('xlink:href', `cards.svg#${card}`)
-  } else {
-    resetDeck();
+  const resetDeck = () => {
+    card_deck = [...CARDS];
+    shuffle(card_deck);
+    $card.attr('fill', "red");
+    $card.attr('xlink:href', `cards.svg#back`);
   }
-}
 
-resetDeck();
+  const drawNewCard = () => {
+    card = card_deck.shift();
+    if (card) {
+      $card.attr('fill', "")
+      $card.attr('xlink:href', `cards.svg#${card}`)
+    } else {
+      resetDeck();
+    }
+  }
 
-const gn = new GyroNorm();
-gn.init(args).then(function(){
-  gn.start(function(data){
-    gamma = data.do.gamma;
+  resetDeck();
+  gn.init(gnArgs).then(() => {
+    gn.start((data) => {
+      gamma = data.do.gamma;
 
-    isFlat = gamma > -FLAT_THRESHOLD && gamma < FLAT_THRESHOLD;
+      isFlat = gamma > -FLAT_THRESHOLD && gamma < FLAT_THRESHOLD;
 
-    if (isFlat != wasFlat) {
-      if (wasFlat) {
-        if (gamma > 0) {isGoingUp = true}
-        if (gamma < 0) {isGoingDown = true}
-      } else {
-        if ((gamma > 0 && isGoingDown) || (gamma < 0 && isGoingUp)) {
-          if (isFaceUp) {
-            drawNewCard();
+      if (isFlat != wasFlat) {
+        if (wasFlat) {
+          if (gamma > 0) {isGoingUp = true}
+          if (gamma < 0) {isGoingDown = true}
+        } else {
+          if ((gamma > 0 && isGoingDown) || (gamma < 0 && isGoingUp)) {
+            if (isFaceUp) {
+              drawNewCard();
+            }
+            isFaceUp = !isFaceUp
           }
-          isFaceUp = !isFaceUp
         }
       }
-    }
 
-    if (isFlat) {
-      isGoingUp = false;
-      isGoingDown = false;
-    }
-    wasFlat = isFlat;
+      if (isFlat) {
+        isGoingUp = false;
+        isGoingDown = false;
+      }
+      wasFlat = isFlat;
+    });
+  }).catch((e) => {
+    console.log('device not supported')
   });
-}).catch(function(e){
-  console.log('device not supported')
-});
+})
     </script>
   </body>
 </html>
