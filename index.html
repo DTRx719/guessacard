@@ -90,7 +90,7 @@ let isGoingDown = false;
 let isFaceUp = true // instructions and verify
 let isFlat = true;
 let wasFlat = true;
-let card_deck = []
+let cardDeck = [];
 
 const gnArgs = {
   frequency: 10,
@@ -112,14 +112,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const cardEl = document.querySelector('.card use')
 
   const resetDeck = () => {
-    card_deck = [...CARDS];
-    shuffle(card_deck);
+    cardDeck = [...CARDS];
+    shuffle(cardDeck);
     cardEl.setAttribute('fill', "red");
     cardEl.setAttribute('xlink:href', `cards.svg#back`);
   }
 
   const drawNewCard = () => {
-    card = card_deck.shift();
+    card = cardDeck.shift();
     if (card) {
       cardEl.setAttribute('fill', "")
       cardEl.setAttribute('xlink:href', `cards.svg#${card}`)
