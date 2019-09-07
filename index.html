@@ -131,6 +131,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  const onTouch = (e) => {
+    e.preventDefault();
+    drawNewCard()
+    return false;
+  }
+
+  document.addEventListener('touchend', onTouch);
+  document.addEventListener('click', onTouch);
+
   resetDeck();
   gn.init(gnArgs).then(() => {
     gn.start((data) => {
