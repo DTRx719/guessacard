@@ -9,21 +9,45 @@
       body {
         background-color: #66cc66;
       }
-      .instructions {
+      .hidden {
         display: none;
-        position: absolute;
-        top: 60px;
-        font-size: 50px;
+      }
+      .messaging {
+        top: 30px;
+        padding: 20px;
+        font-family: Helvetica;
+      }
+      .welcome {
+        font-size: 35px;
         font-weight: bold;
         text-align: center;
-        text-shadow: 2px 2px white;
-        padding: 20px;
+      }
+      .instructions {
+        font-size: 24px;
+        margin-top: 20px;
+      }
+      ul {
+        margin-top: 10px;
       }
     </style>
   </head>
   <body>
     <div class="display">
-      <div class="instructions">Place phone face down to draw a new card</div>
+      <div class="messaging">
+        <div class="welcome">
+          <div>Welcome to</div>
+          <div>Guess a Card</div>
+        </div>
+        <div class="instructions">
+          <div>Draw a new card</div>
+          <ul>
+            <li>tap card, or</li>
+            <li>
+              place phone face down (mobile Chrome and Firefox only)
+            </li>
+          </ul>
+        </div>
+      </div>
       <div class="card-container">
         <svg
           class="card"
@@ -99,6 +123,7 @@ let isFaceUp = true // instructions and verify
 let isFlat = true;
 let wasFlat = true;
 let cardDeck = [];
+let fue = true;
 
 const gnArgs = {
   frequency: 10,
@@ -118,6 +143,7 @@ const shuffle = (a) => {
 document.addEventListener("DOMContentLoaded", () => {
   const gn = new GyroNorm();
   const cardEl = document.querySelector('.card use')
+  const messagingEl = document.querySelector('.messaging')
 
   const resetDeck = () => {
     cardDeck = [...CARDS];
@@ -127,6 +153,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const drawNewCard = () => {
+    if (fue) {
+      messagingEl.classList.add('hidden');
+      fue = false;
+    }
+
     card = cardDeck.shift();
     if (card) {
       cardEl.setAttribute('fill', "")
@@ -142,8 +173,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return false;
   }
 
-  document.addEventListener('touchend', onTouch);
-  document.addEventListener('click', onTouch);
+  cardEl.addEventListener('touchend', onTouch);
+  cardEl.addEventListener('click', onTouch);
 
   resetDeck();
   gn.init(gnArgs).then(() => {
