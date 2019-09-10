@@ -34,6 +34,13 @@
         padding-left: 20px;
         list-style-type: none;
       }
+      .browser-icon {
+        height: 25px;
+        vertical-align: middle;
+      }
+      .browser-text {
+        font-size: 18px;
+      }
     </style>
   </head>
   <body>
@@ -48,7 +55,15 @@
           <ul class="options">
             <li>tap card</li>
             <li class="or">&mdash;or&mdash;</li>
-            <li>flip phone face down (mobile Chrome and Firefox only)</li>
+            <li>
+              flip phone face down
+              <div class="browser-text">
+                (mobile
+                <img class="browser-icon" src="assets/chrome.png" alt="Chrome"/>
+                and
+                <img class="browser-icon" src="assets/firefox.png" alt="Firefox"/> only)
+              </div>
+            </li>
           </ul>
         </div>
       </div>
@@ -59,7 +74,7 @@
           xmlns="http://www.w3.org/2000/svg"
           xmlns:xlink="http://www.w3.org/1999/xlink"
         >
-          <use xlink:href="cards.svg#back" x="0" y="0" fill="red"/>
+          <use xlink:href="assets/cards.svg#back" x="0" y="0" fill="red"/>
         </svg>
       </div>
     </div>
@@ -153,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cardDeck = [...CARDS];
     shuffle(cardDeck);
     cardEl.setAttribute('fill', "red");
-    cardEl.setAttribute('xlink:href', `cards.svg#back`);
+    cardEl.setAttribute('xlink:href', `assets/cards.svg#back`);
   }
 
   const drawNewCard = () => {
@@ -165,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
     card = cardDeck.shift();
     if (card) {
       cardEl.setAttribute('fill', "")
-      cardEl.setAttribute('xlink:href', `cards.svg#${card}`)
+      cardEl.setAttribute('xlink:href', `assets/cards.svg#${card}`)
     } else {
       resetDeck();
     }
